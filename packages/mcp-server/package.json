@@ -4,6 +4,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "mcp": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "zod-to-json-schema": "^3.23.0",
+    "@dashboard-kit/core": "workspace:*",
+    "@dashboard-kit/renderer-html": "workspace:*"
   }
 }

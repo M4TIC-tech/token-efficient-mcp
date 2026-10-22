@@ -28,7 +28,17 @@ importers:
 
   packages/core: {}
 
-  packages/mcp-server: {}
+  packages/mcp-server:
+    dependencies:
+      '@dashboard-kit/core':
+        specifier: workspace:*
+        version: link:../core
+      '@dashboard-kit/renderer-html':
+        specifier: workspace:*
+        version: link:../renderer-html
+      zod-to-json-schema:
+        specifier: ^3.23.0
+        version: 3.25.2(zod@4.6.7)
 
   packages/renderer-html:
     dependencies:
