@@ -1,0 +1,83 @@
+import {
+  DataTableSpec,
+  MetricCardSpec,
+  validateSpec,
+  type BrandConfig,
+} from "@dashboard-kit/core";
+import { resolveDataRef } from "./data-ref.js";
+import { renderDataTable } from "./data-table.js";
+import { escapeHtml } from "./html.js";
+import { renderMetricCard } from "./metric-card.js";
+
+function cssKey(value: string): string {
+  return escapeHtml(
+    value.replace(/[^a-zA-Z0-9_-]/gu, (character) =>
+      `\\${character.codePointAt(0)!.toString(16)} `,
+    ),
+  );
+}
+
+function cssValue(value: string): string {
+  return escapeHtml(
+    value.replace(/[<>&"'\\;{}\u0000-\u001f\u007f]/gu, (character) =>
+      `\\${character.codePointAt(0)!.toString(16)} `,
+    ),
+  );
+}
+
+export function renderShell(
+  specs: unknown[],
+  brand: BrandConfig,
+  fixtures: Record<string, unknown[]>,
+): string {
+  const validation = validateSpec(specs, brand);
+
+  if (!validation.ok) {
+    return `<!doctype html><html><body><pre>${escapeHtml(validation.errors.join("\n"))}</pre></body></html>`;
+  }
+
+  const variables = [
+    ...Object.entries(brand.colors).map(
+      ([key, value]) => `--brand-color-${cssKey(key)}:${cssValue(value)};`,
+    ),
+    ...Object.entries(brand.fonts).map(
+      ([key, value]) => `--brand-font-${cssKey(key)}:"${cssValue(value)}";`,
+    ),
+    ...Object.entries(brand.spacing).map(
+      ([key, value]) => `--brand-space-${cssKey(key)}:${cssValue(value)};`,
+    ),
+    ...Object.entries(brand.radius).map(
+      ([key, value]) => `--brand-radius-${cssKey(key)}:${cssValue(value)};`,
+    ),
+  ].join("");
+  const styles =
+    `:root{${variables}}` +
+    `body{margin:0;padding:var(--brand-space-md,16px);background:var(--brand-color-surface,#fff);font-family:var(--brand-font-body,sans-serif)}`;
+
+  const components = specs
+    .map((spec) => {
+      const component =
+        typeof spec === "object" && spec !== null && "props" in spec
+          ? "component" in spec
+            ? spec.component
+            : undefined
+          : "<invalid spec>";
+      let content = `<div class="dk-unknown">Unknown component: ${escapeHtml(component)}</div>`;
+
+      if (component === "DataTable") {
+        const { props } = DataTableSpec.parse(spec);
+        content = renderDataTable(props, resolveDataRef(props.dataRef, fixtures));
+      } else if (component === "MetricCard") {
+        const { props } = MetricCardSpec.parse(spec);
+        content = renderMetricCard(props);
+      }
+
+      return `<div class="dk-item" style="margin-bottom:var(--brand-space-md,16px)">${content}</div>`;
+    })
+    .join("");
+
+  return (
+    `<!doctype html><html><head><meta charset="utf-8"><title>Dashboard Kit Preview</title><style>${styles}</style></head>` +
+    `<body>${components}</body></html>`
+  );
+}
