@@ -30,7 +30,11 @@ importers:
 
   packages/mcp-server: {}
 
-  packages/renderer-html: {}
+  packages/renderer-html:
+    dependencies:
+      '@dashboard-kit/core':
+        specifier: workspace:*
+        version: link:../core
 
 packages:
 
