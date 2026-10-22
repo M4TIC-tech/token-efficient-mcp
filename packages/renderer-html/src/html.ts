@@ -37,7 +37,17 @@ export function formatValue(
   }
 
   if (type === "boolean") {
-    return value ? "✓" : "✗";
+    const normalized = typeof value === "string" ? value.toLowerCase() : value;
+
+    if (normalized === true || normalized === "true") {
+      return "✓";
+    }
+
+    if (normalized === false || normalized === "false") {
+      return "✗";
+    }
+
+    return escapeHtml(value);
   }
 
   return escapeHtml(value);
