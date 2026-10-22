@@ -25,6 +25,19 @@ function cssValue(value: string): string {
   );
 }
 
+function fontValue(value: string): string {
+  const fontList =
+    value.startsWith('"') && value.endsWith('"') ? value.slice(1, -1) : value;
+  const escaped = escapeHtml(
+    fontList.replace(/[<>&;{}\u0000-\u001f\u007f]/gu, (character) =>
+      `\\${character.codePointAt(0)!.toString(16)} `,
+    ),
+  );
+
+  // Quotes delimit individual CSS font names inside a style block.
+  return escaped.replace(/&quot;/g, '"');
+}
+
 export function renderShell(
   specs: unknown[],
   brand: BrandConfig,
@@ -41,7 +54,7 @@ export function renderShell(
       ([key, value]) => `--brand-color-${cssKey(key)}:${cssValue(value)};`,
     ),
     ...Object.entries(brand.fonts).map(
-      ([key, value]) => `--brand-font-${cssKey(key)}:"${cssValue(value)}";`,
+      ([key, value]) => `--brand-font-${cssKey(key)}:${fontValue(value)};`,
     ),
     ...Object.entries(brand.spacing).map(
       ([key, value]) => `--brand-space-${cssKey(key)}:${cssValue(value)};`,

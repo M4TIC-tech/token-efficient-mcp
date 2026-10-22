@@ -3,7 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "typecheck": "pnpm -r typecheck"
+    "typecheck": "pnpm -r typecheck",
+    "demo": "tsx examples/demo.ts"
   },
   "devDependencies": {
     "@modelcontextprotocol/sdk": "^1.32.1",

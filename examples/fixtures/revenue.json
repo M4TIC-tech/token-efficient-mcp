@@ -1,0 +1,29 @@
+{
+  "query.revenue_by_region": [
+    { "region": "North America", "revenue": 875000 },
+    { "region": "EMEA", "revenue": 742000 },
+    { "region": "APAC", "revenue": 688000 },
+    { "region": "LATAM", "revenue": 326000 },
+    { "region": "DACH", "revenue": 415000 },
+    { "region": "UK & Ireland", "revenue": 358000 },
+    { "region": "Nordics", "revenue": 184000 },
+    { "region": "Benelux", "revenue": 163000 },
+    { "region": "France", "revenue": 287000 },
+    { "region": "Iberia", "revenue": 142000 },
+    { "region": "Italy", "revenue": 198000 },
+    { "region": "Poland", "revenue": 96000 },
+    { "region": "Japan", "revenue": 384000 },
+    { "region": "ANZ", "revenue": 217000 },
+    { "region": "India", "revenue": 268000 },
+    { "region": "SEA", "revenue": 176000 },
+    { "region": "Greater China", "revenue": 536000 },
+    { "region": "Korea", "revenue": 229000 },
+    { "region": "Brazil", "revenue": 193000 },
+    { "region": "Mexico", "revenue": 121000 },
+    { "region": "Canada", "revenue": 254000 },
+    { "region": "Middle East", "revenue": 158000 },
+    { "region": "Africa", "revenue": 67000 },
+    { "region": "Turkey", "revenue": 83000 },
+    { "region": "Israel", "revenue": 109000 }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "acme",
+  "colors": {
+    "surface": "#ffffff",
+    "text": "#0f172a",
+    "border": "#cbd5e1",
+    "accent": "#0a7c5a",
+    "muted": "#64748b"
+  },
+  "fonts": {
+    "body": "Inter, system-ui, sans-serif",
+    "heading": "Inter, system-ui, sans-serif"
+  },
+  "spacing": { "sm": "8px", "md": "16px", "lg": "24px" },
+  "radius": { "sm": "4px", "md": "8px", "lg": "12px" }
+}
