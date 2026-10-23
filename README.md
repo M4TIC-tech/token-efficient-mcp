@@ -15,6 +15,10 @@ We benchmarked Claude Sonnet 5.5 (High effort) generating a simple sales dashboa
 | Build a data table | 2,533 tokens | 134 tokens | **94.7%** |
 | Build a KPI card | 1,028 tokens | 76 tokens | **92.6%** |
 | Side-by-side layout | 3,189 tokens | 197 tokens | **93.8%** |
+| Brand-constrained | 2,986 tokens | 177 tokens | **94.1%** |
+| Complex multi-element | 4,131 tokens | 244 tokens | **94.1%** |
+
+**Average token reduction: 93.9%**
 
 *Read the full [Benchmark Results](benchmarks/RESULTS.md).*
 
