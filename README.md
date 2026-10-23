@@ -34,6 +34,27 @@ The agent never writes CSS. It never hallucinates a hex code. It never inlines d
    *(See setup instructions in the docs)*
 3. Ask Claude: *"Use dashboard-kit to build a dashboard with a DataTable for dataRef `query.revenue_by_region` and a MetricCard for Total Revenue."*
 
+### Windows Installation (Important)
+Because Claude Desktop on Windows struggles to launch `.cmd` files in directories with spaces, you must use the `node` command directly to launch the server. 
+
+Add this to your `%APPDATA%\Claude\claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "dashboard-kit": {
+      "command": "node",
+      "args": [
+        "C:\\Path\\To\\Your\\Repo\\node_modules\\tsx\\dist\\cli.mjs",
+        "C:\\Path\\To\\Your\\Repo\\packages\\mcp-server\\src\\index.ts"
+      ]
+    }
+  }
+}
+```
+
+(Make sure to replace C:\\Path\\To\\Your\\Repo with your actual absolute path).
+
 ## Features
 - **Two Components:** `DataTable` (sortable, paginated) and `MetricCard` (with trends).
 - **Brand Enforcement:** Injects brand tokens via CSS variables at render time. Zero hard-coded hex codes.
