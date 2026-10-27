@@ -5,7 +5,8 @@ import { loadBrand } from "../packages/core/src/index.js";
 import { renderShell } from "../packages/renderer-html/src/index.js";
 
 const repoRoot = fileURLToPath(new URL("../", import.meta.url));
-const brand = loadBrand(join(repoRoot, "examples", "brand-configs", "acme.json"));
+const lightBrand = loadBrand(join(repoRoot, "examples", "brand-configs", "acme.json"));
+const darkBrand = loadBrand(join(repoRoot, "examples", "brand-configs", "acme-dark.json"));
 const fixtures: Record<string, unknown[]> = JSON.parse(
   readFileSync(join(repoRoot, "examples", "fixtures", "revenue.json"), "utf-8"),
 );
@@ -34,8 +35,13 @@ const specs = [
   },
 ];
 
-const html = renderShell(specs, brand, fixtures);
 const outputDir = join(repoRoot, "examples", "out");
 mkdirSync(outputDir, { recursive: true });
-writeFileSync(join(outputDir, "preview.html"), html, "utf-8");
-console.log("Preview written to examples/out/preview.html");
+
+for (const brand of [lightBrand, darkBrand]) {
+  const html = renderShell(specs, brand, fixtures);
+  writeFileSync(join(outputDir, `preview-${brand.mode}.html`), html, "utf-8");
+}
+
+console.log("Preview written to examples/out/preview-light.html");
+console.log("Preview written to examples/out/preview-dark.html");

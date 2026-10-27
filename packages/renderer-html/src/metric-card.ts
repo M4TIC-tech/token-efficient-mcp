@@ -12,27 +12,26 @@ export function renderMetricCard(props: MetricCardSpec["props"]): string {
 
   if (props.trend) {
     const glyph = { up: "▲", down: "▼", flat: "■" }[props.trend.direction];
-    // note: danger is an optional brand token
-    const color = {
-      up: "var(--brand-color-accent,#0a7)",
-      down: "var(--brand-color-danger, #c33)",
-      flat: "var(--brand-color-muted,#666)",
+    const trendClass = {
+      up: "dk-trend-up",
+      down: "dk-trend-down",
+      flat: "dk-trend-flat",
     }[props.trend.direction];
 
     trend =
-      `<div class="dk-trend" style="display:flex;gap:4px;align-items:center;font-size:12px;font-family:var(--brand-font-body,sans-serif);color:${escapeHtml(color)}">` +
+      `<div class="dk-trend ${escapeHtml(trendClass)}">` +
       `<span>${escapeHtml(glyph)}</span><span>${escapeHtml(props.trend.value + "%")}</span></div>`;
   }
 
   const comparison =
     props.comparison !== undefined
-      ? `<div style="font-size:11px;color:var(--brand-color-muted,#666);font-family:var(--brand-font-body,sans-serif)">${escapeHtml(props.comparison)}</div>`
+      ? `<div class="dk-metric-comparison">${escapeHtml(props.comparison)}</div>`
       : "";
 
   return (
-    `<div class="dk-metric" style="background:var(--brand-color-surface,#fff);border:1px solid var(--brand-color-border,#ddd);border-radius:var(--brand-radius-md,8px);padding:var(--brand-space-md,16px);display:flex;flex-direction:column;gap:4px">` +
-    `<div style="font-size:12px;color:var(--brand-color-muted,#666);font-family:var(--brand-font-body,sans-serif)">${escapeHtml(props.label)}</div>` +
-    `<div style="font-size:24px;font-weight:600;color:var(--brand-color-text,#111);font-family:var(--brand-font-heading,sans-serif)">${value}</div>` +
+    `<div class="dk-card dk-metric">` +
+    `<div class="dk-metric-label">${escapeHtml(props.label)}</div>` +
+    `<div class="dk-metric-value">${value}</div>` +
     trend +
     comparison +
     `</div>`

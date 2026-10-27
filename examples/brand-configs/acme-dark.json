@@ -1,0 +1,6 @@
+{
+  "id": "acme-dark",
+  "mode": "dark",
+  "colors": { "accent": "#10b981" },
+  "fonts": { "heading": "Inter, system-ui, sans-serif" }
+}
