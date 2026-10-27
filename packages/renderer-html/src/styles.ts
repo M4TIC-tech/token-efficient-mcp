@@ -55,6 +55,23 @@ body {
   letter-spacing: 0.05em;
 }
 
+.dk-th[data-sortable="true"] {
+  cursor: pointer;
+  user-select: none;
+}
+
+.dk-th[data-sortable="true"]:hover {
+  color: var(--brand-color-text, #111);
+}
+
+.dk-th[data-sortable="true"]:focus-visible {
+  outline: 2px solid var(--brand-color-accent, #0a7);
+  outline-offset: -2px;
+}
+
+.dk-th[aria-sort="ascending"]::after { content: " ▲"; }
+.dk-th[aria-sort="descending"]::after { content: " ▼"; }
+
 .dk-td {
   padding: var(--brand-space-sm, 8px) var(--brand-space-md, 16px);
   border-bottom: 1px solid var(--brand-color-border, #ddd);

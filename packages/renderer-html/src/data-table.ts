@@ -16,7 +16,7 @@ export function renderDataTable(
   const headers = props.columns
     .map(
       (column) =>
-        `<th class="dk-th dk-text-${escapeHtml(column.align)}" data-sortable="${escapeHtml(column.sortable)}">${escapeHtml(column.label)}</th>`,
+        `<th class="dk-th dk-text-${escapeHtml(column.align)}" data-sortable="${escapeHtml(column.sortable)}" data-type="${escapeHtml(column.type)}">${escapeHtml(column.label)}</th>`,
     )
     .join("");
   const body = rows

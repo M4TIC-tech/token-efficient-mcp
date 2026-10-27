@@ -8,6 +8,7 @@ import { resolveDataRef } from "./data-ref.js";
 import { renderDataTable } from "./data-table.js";
 import { escapeHtml } from "./html.js";
 import { renderMetricCard } from "./metric-card.js";
+import { sortingScript } from "./scripts.js";
 import { stylesheet } from "./styles.js";
 
 function cssKey(value: string): string {
@@ -97,6 +98,6 @@ export function renderShell(
 
   return (
     `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Dashboard Kit Preview</title><style>${styles}</style></head>` +
-    `<body><div class="dk-grid">${components}</div></body></html>`
+    `<body><div class="dk-grid">${components}</div><script>${sortingScript}</script></body></html>`
   );
 }
