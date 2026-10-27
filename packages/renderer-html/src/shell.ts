@@ -1,6 +1,7 @@
 import {
   DataTableSpec,
   MetricCardSpec,
+  ChartCardSpec,
   validateSpec,
   type BrandConfig,
 } from "@dashboard-kit/core";
@@ -8,6 +9,7 @@ import { resolveDataRef } from "./data-ref.js";
 import { renderDataTable } from "./data-table.js";
 import { escapeHtml } from "./html.js";
 import { renderMetricCard } from "./metric-card.js";
+import { renderChartCard } from "./chart-card.js";
 import { sortingScript } from "./scripts.js";
 import { stylesheet } from "./styles.js";
 
@@ -90,6 +92,9 @@ export function renderShell(
       } else if (component === "MetricCard") {
         const { props } = MetricCardSpec.parse(spec);
         content = renderMetricCard(props);
+      } else if (component === "ChartCard") {
+        const { props } = ChartCardSpec.parse(spec);
+        content = renderChartCard(props);
       }
 
       return content;

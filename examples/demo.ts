@@ -33,6 +33,21 @@ const specs = [
       comparison: "vs. same period last year",
     },
   },
+  {
+    component: "ChartCard",
+    props: {
+      title: "Revenue by Region",
+      type: "bar",
+      data: [
+        { label: "NA", value: 875000 },
+        { label: "EMEA", value: 742000 },
+        { label: "APAC", value: 688000 },
+        { label: "LATAM", value: 326000 },
+        { label: "DACH", value: 415000 },
+      ],
+      format: "currency",
+    },
+  },
 ];
 
 const outputDir = join(repoRoot, "examples", "out");

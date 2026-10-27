@@ -170,7 +170,44 @@ body {
   font-family: var(--brand-font-body, sans-serif);
 }
 
+.dk-chart {
+  padding: var(--brand-space-md, 16px);
+}
+
+.dk-chart-title {
+  margin-bottom: var(--brand-space-sm, 8px);
+  color: var(--brand-color-muted, #666);
+  font-family: var(--brand-font-heading, sans-serif);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.dk-chart-scroll { overflow-x: auto; }
+.dk-chart-svg { display: block; min-width: 100%; }
+
+.dk-chart-grid {
+  stroke: var(--brand-color-border, #ddd);
+  stroke-width: 1;
+}
+
+.dk-chart-label {
+  fill: var(--brand-color-muted, #666);
+  font-family: var(--brand-font-body, sans-serif);
+  font-size: 11px;
+}
+
+.dk-chart-bar, .dk-chart-point { fill: var(--brand-color-accent, #0a7); }
+.dk-chart-bar { transition: opacity 0.2s ease; }
+.dk-chart-bar:hover { opacity: 0.8; }
+
+.dk-chart-line {
+  stroke: var(--brand-color-accent, #0a7);
+  vector-effect: non-scaling-stroke;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .dk-card, .dk-table tbody tr { transition: none; }
+  .dk-card, .dk-table tbody tr, .dk-chart-bar { transition: none; }
 }
 `;

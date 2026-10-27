@@ -2,6 +2,8 @@ export { DataTableSpec, dataTableContract } from "./components/data-table.js";
 export type { DataTableContract } from "./components/data-table.js";
 export { MetricCardSpec, metricCardContract } from "./components/metric-card.js";
 export type { MetricCardContract } from "./components/metric-card.js";
+export { ChartCardSpec, chartCardContract } from "./components/chart-card.js";
+export type { ChartCardContract } from "./components/chart-card.js";
 export { BrandConfig, loadBrand, baseTheme, mergeBrand } from "./brand.js";
 export type { BaseMode } from "./brand.js";
 export { contracts } from "./contracts.js";
