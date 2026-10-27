@@ -30,6 +30,8 @@ body {
   transition: box-shadow 0.2s ease;
 }
 
+.dk-grid-container > * { min-width: 0; }
+
 .dk-card:hover {
   box-shadow: var(--brand-shadow-lg, 0 4px 6px rgba(0,0,0,0.05));
 }
@@ -205,6 +207,11 @@ body {
 .dk-chart-line {
   stroke: var(--brand-color-accent, #0a7);
   vector-effect: non-scaling-stroke;
+}
+
+@media (max-width: 768px) {
+  .dk-grid-container { grid-template-columns: 1fr !important; }
+  .dk-grid-container > * { grid-column: span 1 !important; }
 }
 
 @media (prefers-reduced-motion: reduce) {

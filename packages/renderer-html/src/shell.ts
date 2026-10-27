@@ -2,6 +2,7 @@ import {
   DataTableSpec,
   MetricCardSpec,
   ChartCardSpec,
+  DashboardGridSpec,
   validateSpec,
   type BrandConfig,
 } from "@dashboard-kit/core";
@@ -10,6 +11,7 @@ import { renderDataTable } from "./data-table.js";
 import { escapeHtml } from "./html.js";
 import { renderMetricCard } from "./metric-card.js";
 import { renderChartCard } from "./chart-card.js";
+import { renderDashboardGrid } from "./dashboard-grid.js";
 import { sortingScript } from "./scripts.js";
 import { stylesheet } from "./styles.js";
 
@@ -76,28 +78,38 @@ export function renderShell(
   ].join("");
   const styles = `:root{${variables}}${stylesheet}`;
 
+  function renderComponent(spec: unknown, fixtures: Record<string, unknown[]>): string {
+    const component =
+      typeof spec === "object" && spec !== null && "props" in spec
+        ? "component" in spec
+          ? spec.component
+          : undefined
+        : "<invalid spec>";
+    let content = `<div class="dk-unknown">Unknown component: ${escapeHtml(component)}</div>`;
+
+    if (component === "DataTable") {
+      const { props } = DataTableSpec.parse(spec);
+      content = renderDataTable(props, resolveDataRef(props.dataRef, fixtures));
+    } else if (component === "MetricCard") {
+      const { props } = MetricCardSpec.parse(spec);
+      content = renderMetricCard(props);
+    } else if (component === "ChartCard") {
+      const { props } = ChartCardSpec.parse(spec);
+      content = renderChartCard(props);
+    }
+
+    return content;
+  }
+
   const components = specs
     .map((spec) => {
-      const component =
-        typeof spec === "object" && spec !== null && "props" in spec
-          ? "component" in spec
-            ? spec.component
-            : undefined
-          : "<invalid spec>";
-      let content = `<div class="dk-unknown">Unknown component: ${escapeHtml(component)}</div>`;
-
-      if (component === "DataTable") {
-        const { props } = DataTableSpec.parse(spec);
-        content = renderDataTable(props, resolveDataRef(props.dataRef, fixtures));
-      } else if (component === "MetricCard") {
-        const { props } = MetricCardSpec.parse(spec);
-        content = renderMetricCard(props);
-      } else if (component === "ChartCard") {
-        const { props } = ChartCardSpec.parse(spec);
-        content = renderChartCard(props);
+      if (typeof spec === "object" && spec !== null && "component" in spec &&
+          spec.component === "DashboardGrid") {
+        const { props } = DashboardGridSpec.parse(spec);
+        return renderDashboardGrid(props, fixtures, renderComponent);
       }
 
-      return content;
+      return `<div class="dk-item">${renderComponent(spec, fixtures)}</div>`;
     })
     .join("");
 

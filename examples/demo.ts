@@ -12,40 +12,83 @@ const fixtures: Record<string, unknown[]> = JSON.parse(
 );
 const specs = [
   {
-    component: "DataTable",
+    component: "DashboardGrid",
     props: {
-      dataRef: "query.revenue_by_region",
-      columns: [
-        { key: "region", label: "Region", type: "string", align: "left" },
-        { key: "revenue", label: "Revenue", type: "currency", align: "right" },
+      gap: "md",
+      children: [
+        {
+          span: 4,
+          spec: {
+            component: "MetricCard",
+            props: {
+              label: "Total Revenue",
+              value: 1284500,
+              format: "currency",
+              trend: { direction: "up", value: 12.4 },
+              comparison: "vs. same period last year",
+            },
+          },
+        },
+        {
+          span: 4,
+          spec: {
+            component: "MetricCard",
+            props: {
+              label: "Average Deal Size",
+              value: 24850,
+              format: "currency",
+              trend: { direction: "up", value: 4.8 },
+              comparison: "vs. same period last year",
+            },
+          },
+        },
+        {
+          span: 4,
+          spec: {
+            component: "MetricCard",
+            props: {
+              label: "Conversion Rate",
+              value: 3.2,
+              format: "percent",
+              trend: { direction: "up", value: 0.5 },
+              comparison: "vs. same period last year",
+            },
+          },
+        },
+        {
+          span: 8,
+          spec: {
+            component: "ChartCard",
+            props: {
+              title: "Revenue by Region",
+              type: "bar",
+              data: [
+                { label: "NA", value: 875000 },
+                { label: "EMEA", value: 742000 },
+                { label: "APAC", value: 688000 },
+                { label: "LATAM", value: 326000 },
+                { label: "DACH", value: 415000 },
+              ],
+              format: "currency",
+            },
+          },
+        },
+        {
+          span: 4,
+          spec: {
+            component: "DataTable",
+            props: {
+              dataRef: "query.revenue_by_region",
+              columns: [
+                { key: "region", label: "Region", type: "string", align: "left" },
+                { key: "revenue", label: "Revenue", type: "currency", align: "right" },
+              ],
+              pageSize: 25,
+              emptyState: "No revenue data for this period",
+            },
+          },
+        },
       ],
-      pageSize: 25,
-      emptyState: "No revenue data for this period",
-    },
-  },
-  {
-    component: "MetricCard",
-    props: {
-      label: "Total Revenue",
-      value: 1284500,
-      format: "currency",
-      trend: { direction: "up", value: 12.4 },
-      comparison: "vs. same period last year",
-    },
-  },
-  {
-    component: "ChartCard",
-    props: {
-      title: "Revenue by Region",
-      type: "bar",
-      data: [
-        { label: "NA", value: 875000 },
-        { label: "EMEA", value: 742000 },
-        { label: "APAC", value: 688000 },
-        { label: "LATAM", value: 326000 },
-        { label: "DACH", value: 415000 },
-      ],
-      format: "currency",
     },
   },
 ];

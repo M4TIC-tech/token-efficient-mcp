@@ -22,7 +22,7 @@ export function validateSpec(
 } {
   const errors: string[] = [];
 
-  for (const spec of specs) {
+  function validateComponent(spec: unknown, path?: string): void {
     const component =
       typeof spec === "object" && spec !== null && "component" in spec
         ? spec.component
@@ -30,18 +30,35 @@ export function validateSpec(
     const contract = contracts.find((entry) => entry.name === component);
 
     if (!contract) {
-      errors.push(`Unknown component: ${String(component)}`);
-      continue;
+      errors.push(`${path ? `${path}: ` : ""}Unknown component: ${String(component)}`);
+      return;
     }
 
+    const location = path ? `${path} (${component})` : String(component);
     const result = contract.spec.safeParse(spec);
 
     if (!result.success) {
       errors.push(
-        `${component} spec invalid: ${JSON.stringify(result.error.flatten())}`,
+        `${location} spec invalid: ${JSON.stringify(result.error.flatten())}`,
       );
     }
+
+    const props = typeof spec === "object" && spec !== null && "props" in spec
+      ? spec.props
+      : undefined;
+
+    if (component === "DashboardGrid" && typeof props === "object" && props !== null &&
+        "children" in props && Array.isArray(props.children)) {
+      props.children.forEach((child: unknown, index: number) => {
+        const childSpec = typeof child === "object" && child !== null && "spec" in child
+          ? child.spec
+          : undefined;
+        validateComponent(childSpec, `${location} > child[${index}]`);
+      });
+    }
   }
+
+  specs.forEach((spec) => validateComponent(spec));
 
   const estimatedTokens = estimateTokens(specs);
   // TODO: brand tokens are enforced at render time; violations cannot occur here
