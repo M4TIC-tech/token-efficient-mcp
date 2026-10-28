@@ -1,6 +1,6 @@
 # Dashboard Kit MCP
 
-**Cut your AI agent's token bill by ~94% on repetitive UI generation while guaranteeing brand consistency and schema validation.**
+**Cut your AI agent's token bill by ~92% on repetitive UI generation while guaranteeing brand consistency and schema validation.**
 
 Agents are great at logic, but terrible at writing HTML/CSS from scratch. Every time you ask an agent to "build a dashboard", it burns thousands of tokens writing boilerplate `<table>` markup, guessing hex codes, and inventing CSS layouts. 
 
@@ -17,8 +17,9 @@ We benchmarked Claude Sonnet 5.5 (High effort) generating a simple sales dashboa
 | Side-by-side layout | 3,189 tokens | 197 tokens | **93.8%** |
 | Brand-constrained | 2,986 tokens | 177 tokens | **94.1%** |
 | Complex multi-element | 4,131 tokens | 244 tokens | **94.1%** |
+| Full dashboard grid | 3,214 tokens | 519 tokens | **83.8%** |
 
-**Average token reduction: 93.9%**
+**Average token reduction: 92.2%**
 
 *Read the full [Benchmark Results](benchmarks/RESULTS.md).*
 

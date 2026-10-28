@@ -17,10 +17,10 @@
 | **P3** | Table + Metric (Side-by-side) | 3,189 | 197 | **93.8%** |
 | **P4** | Brand-Constrained | 2,986 | 177 | **94.1%** |
 | **P5** | Complex Multi-element | 4,131 | 244 | **94.1%** |
-
-**Average Token Reduction: 93.9%**
+| **P6** | Full Grid Layout (3 Metrics + Chart + Table) | 3,214 | 519 | **83.8%** |
+| **Avg**| | | | **92.2%** |
 
 ## Observations
 - **Scaling:** In the baseline, adding components and layout increased output tokens significantly. In the Kit run, the agent just added another JSON object to the array, keeping output tokens flat and low.
 - **Determinism & Brand Safety:** The baseline model repeatedly hallucinated token names (e.g., `--color-accent-primary` instead of `--brand-color-accent`) and hard-coded default colors. The Kit run applied brand tokens deterministically via the server, resulting in zero brand violations.
-- **Code Quality:** The baseline wrote thousands of lines of CSS/JS it hadn't even tested. The Kit output validated specs via Zod before rendering.
+- **Layout Scaling:** Even with a complex 12-column layout comprising 3 metrics, a chart, and a 25-row table, the Kit maintained a >83% token reduction. The baseline LLM had to write extensive CSS Grid and Flexbox code, while the Kit agent simply assigned a `span` to each child.
