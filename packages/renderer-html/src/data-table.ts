@@ -30,8 +30,9 @@ export function renderDataTable(
           .join("")}</tr>`,
     )
     .join("");
+  const maxHeight = props.maxHeight === undefined ? "none" : `${props.maxHeight}px`;
   return (
-    `<div class="dk-card dk-table-wrapper"><div class="dk-table-scroll">` +
+    `<div class="dk-card dk-table-wrapper"><div class="dk-table-scroll" style="max-height: ${escapeHtml(maxHeight)};">` +
     `<table class="dk-table"><thead><tr>${headers}</tr></thead><tbody>${body}</tbody></table></div>` +
     `<nav class="dk-pagination" aria-label="Table pagination">` +
     `<button class="dk-pagination-button" disabled>Prev</button>` +

@@ -17,6 +17,7 @@ export const DataTableSpec = z.object({
       .min(1)
       .max(20),
     pageSize: z.number().int().positive().max(100).default(25),
+    maxHeight: z.number().int().positive().optional(),
     filterable: z.boolean().default(false),
     exportable: z.boolean().default(false),
     emptyState: z.string().optional(),

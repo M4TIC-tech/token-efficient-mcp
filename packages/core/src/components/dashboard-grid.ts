@@ -7,6 +7,7 @@ export const DashboardGridSpec = z.object({
   component: z.literal("DashboardGrid"),
   props: z.object({
     gap: z.enum(["sm", "md", "lg"]).default("md"),
+    height: z.string().optional(),
     children: z.array(z.object({
       span: z.number().int().min(1).max(12).default(12),
       spec: z.union([MetricCardSpec, DataTableSpec, ChartCardSpec]),

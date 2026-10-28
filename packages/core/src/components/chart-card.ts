@@ -9,8 +9,10 @@ export const ChartCardSpec = z.object({
       .array(z.object({ label: z.string(), value: z.number() }))
       .min(1)
       .max(50),
-    height: z.number().int().positive().max(600).default(220),
+    height: z.number().int().positive().max(600).default(400),
     format: z.enum(["currency", "percent", "number"]).default("number"),
+    sort: z.enum(["none", "asc", "desc"]).default("desc"),
+    showLabels: z.boolean().default(true),
   }),
 });
 
@@ -44,8 +46,10 @@ export const chartCardContract = {
         { label: "LATAM", value: 326000 },
         { label: "DACH", value: 415000 },
       ],
-      height: 220,
+      height: 400,
       format: "currency",
+      sort: "desc",
+      showLabels: true,
     },
   } satisfies ChartCardSpec,
 };
