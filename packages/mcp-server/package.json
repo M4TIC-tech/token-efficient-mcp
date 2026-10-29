@@ -1,15 +1,40 @@
 {
-  "name": "@dashboard-kit/mcp-server",
-  "version": "0.0.0",
-  "private": true,
+  "name": "@m4tic/mcp-server",
+  "version": "0.1.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/M4TIC-tech/token-efficient-mcp.git"
+  },
+  "keywords": ["mcp", "model-context-protocol", "ai-agents", "dashboards", "token-efficiency", "ui"],
   "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "bin": {
+    "token-efficient-mcp": "./dist/index.js"
+  },
   "scripts": {
+    "build": "tsup src/index.ts --format esm --dts --clean",
     "typecheck": "tsc --noEmit",
     "mcp": "tsx src/index.ts"
   },
   "dependencies": {
     "zod-to-json-schema": "^3.23.0",
-    "@dashboard-kit/core": "workspace:*",
-    "@dashboard-kit/renderer-html": "workspace:*"
+    "@m4tic/core": "workspace:*",
+    "@m4tic/renderer-html": "workspace:*",
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "zod": "^4.6.7"
   }
 }

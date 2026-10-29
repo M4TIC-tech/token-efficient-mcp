@@ -34,7 +34,7 @@ The agent never writes CSS. It never hallucinates a hex code. It never inlines d
 
 ## Quick Start (Claude Desktop)
 
-1. Clone this repo and run `pnpm install`.
+1. Clone this repo, run `pnpm install`, then `pnpm build`.
 2. Add the MCP server to your `claude_desktop_config.json`:
    *(See setup instructions in the docs)*
 3. Ask Claude: *"Use dashboard-kit to build a dashboard with a DataTable for dataRef `query.revenue_by_region` and a MetricCard for Total Revenue."*
@@ -50,8 +50,7 @@ Add this to your `%APPDATA%\Claude\claude_desktop_config.json`:
     "dashboard-kit": {
       "command": "node",
       "args": [
-        "C:\\Path\\To\\Your\\Repo\\node_modules\\tsx\\dist\\cli.mjs",
-        "C:\\Path\\To\\Your\\Repo\\packages\\mcp-server\\src\\index.ts"
+        "C:\\Path\\To\\Your\\Repo\\packages\\mcp-server\\dist\\index.js"
       ]
     }
   }
@@ -59,6 +58,28 @@ Add this to your `%APPDATA%\Claude\claude_desktop_config.json`:
 ```
 
 (Make sure to replace C:\\Path\\To\\Your\\Repo with your actual absolute path).
+
+### NPM packages and executable
+
+The publishable packages are `@m4tic/core`, `@m4tic/renderer-html`, and
+`@m4tic/mcp-server`. `pnpm build` creates their ESM JavaScript and TypeScript
+declarations in `dist/`, including the core package's light and dark base themes.
+Rebuild after changing package sources before running the demo or server.
+The toolchain uses TypeScript 6 because tsup's declaration generator requires
+its JavaScript compiler API, which TypeScript 7 does not expose.
+The `ignoreDeprecations: "6.0"` compiler setting covers the legacy `baseUrl`
+option injected internally by tsup's declaration pipeline.
+
+After publishing the packages, install the server with
+`npm install --global @m4tic/mcp-server` and launch it with `token-efficient-mcp`.
+It communicates over stdio and does not print a startup message to stdout.
+
+The `brandId` tool argument accepts an absolute or working-directory-relative
+JSON file path, a local name with an optional `.json` extension, or a name from
+`examples/brand-configs/`. Source checkouts also find their example configs from
+any working directory. Missing configs use the bundled light theme; invalid
+existing configs still report errors. If no local or checkout revenue fixture
+bundle exists, tables render their empty state.
 
 ## Features
 - **Two Components:** `DataTable` (sortable, paginated) and `MetricCard` (with trends).

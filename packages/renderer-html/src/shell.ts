@@ -5,7 +5,7 @@ import {
   DashboardGridSpec,
   validateSpec,
   type BrandConfig,
-} from "@dashboard-kit/core";
+} from "@m4tic/core";
 import { resolveDataRef } from "./data-ref.js";
 import { renderDataTable } from "./data-table.js";
 import { escapeHtml } from "./html.js";

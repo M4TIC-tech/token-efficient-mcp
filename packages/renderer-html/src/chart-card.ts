@@ -1,4 +1,4 @@
-import type { ChartCardSpec } from "@dashboard-kit/core";
+import type { ChartCardSpec } from "@m4tic/core";
 import { escapeHtml, formatValue } from "./html.js";
 
 function coordinate(value: number): string {

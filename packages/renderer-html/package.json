@@ -1,12 +1,27 @@
 {
-  "name": "@dashboard-kit/renderer-html",
-  "version": "0.0.0",
-  "private": true,
+  "name": "@m4tic/renderer-html",
+  "version": "0.1.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/M4TIC-tech/token-efficient-mcp.git"
+  },
   "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "publishConfig": { "access": "public" },
   "scripts": {
+    "build": "tsup src/index.ts --format esm --dts --clean",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@dashboard-kit/core": "workspace:*"
+    "@m4tic/core": "workspace:*"
   }
 }

@@ -1,4 +1,4 @@
-import type { DataTableSpec } from "@dashboard-kit/core";
+import type { DataTableSpec } from "@m4tic/core";
 import { escapeHtml, formatValue } from "./html.js";
 
 export function renderDataTable(

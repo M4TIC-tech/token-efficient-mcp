@@ -5,6 +5,7 @@
     "moduleResolution": "NodeNext",
     "types": ["node"],
     "strict": true,
+    "ignoreDeprecations": "6.0",
     "noEmit": true,
     "skipLibCheck": true
   },

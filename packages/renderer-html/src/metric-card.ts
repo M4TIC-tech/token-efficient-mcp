@@ -1,4 +1,4 @@
-import type { MetricCardSpec } from "@dashboard-kit/core";
+import type { MetricCardSpec } from "@m4tic/core";
 import { escapeHtml, formatValue } from "./html.js";
 
 export function renderMetricCard(props: MetricCardSpec["props"]): string {

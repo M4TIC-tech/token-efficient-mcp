@@ -1,4 +1,4 @@
-import type { DashboardGridSpec } from "@dashboard-kit/core";
+import type { DashboardGridSpec } from "@m4tic/core";
 import { escapeHtml } from "./html.js";
 
 type ChildSpec = DashboardGridSpec["props"]["children"][number]["spec"];

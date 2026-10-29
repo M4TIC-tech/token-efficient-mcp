@@ -15,10 +15,10 @@ at render time, never emitted by the agent.
 
 ## Stack and conventions
 - pnpm workspaces, TypeScript strict, ESM only, `@types/node` enabled.
-- Inter-package imports use `workspace:*` (e.g. `"@dashboard-kit/core": "workspace:*"`).
+- Inter-package imports use `workspace:*` (e.g. `"@m4tic/core": "workspace:*"`).
 - Zod for schemas, zod-to-json-schema for MCP exposure.
 - @modelcontextprotocol/sdk for the server, stdio transport.
-- tsx for running TS directly; no build step required for dev.
+- tsup for ESM builds and declarations; tsx for running development scripts.
 
 ### Brand tokens vs. structural constants
 Every value a brand config could reasonably control—colors, fonts,
@@ -61,5 +61,5 @@ required until the benchmark task. Adding a test suite is out of scope
 for the pilot.
 
 ## Known decisions
-- @dashboard-kit/core exports its source barrel (src/index.ts) directly.
-  No build step during the pilot; add a tsup/esbuild build before npm publish.
+- Published packages export dist/index.js and dist/index.d.ts. Run pnpm build
+  after installing or changing package sources so workspace imports are current.
