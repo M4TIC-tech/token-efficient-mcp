@@ -3,6 +3,9 @@ import {
   MetricCardSpec,
   ChartCardSpec,
   DashboardGridSpec,
+  DonutChartSpec,
+  LeaderboardSpec,
+  ProgressBarSpec,
   validateSpec,
   type BrandConfig,
 } from "@m4tic/core";
@@ -12,6 +15,9 @@ import { escapeHtml } from "./html.js";
 import { renderMetricCard } from "./metric-card.js";
 import { renderChartCard } from "./chart-card.js";
 import { renderDashboardGrid } from "./dashboard-grid.js";
+import { renderDonutChart } from "./donut-chart.js";
+import { renderLeaderboard } from "./leaderboard.js";
+import { renderProgressBar } from "./progress-bar.js";
 import { sortingScript } from "./scripts.js";
 import { stylesheet } from "./styles.js";
 
@@ -96,6 +102,15 @@ export function renderShell(
     } else if (component === "ChartCard") {
       const { props } = ChartCardSpec.parse(spec);
       content = renderChartCard(props);
+    } else if (component === "DonutChart") {
+      const { props } = DonutChartSpec.parse(spec);
+      content = renderDonutChart(props);
+    } else if (component === "Leaderboard") {
+      const { props } = LeaderboardSpec.parse(spec);
+      content = renderLeaderboard(props);
+    } else if (component === "ProgressBar") {
+      const { props } = ProgressBarSpec.parse(spec);
+      content = renderProgressBar(props);
     }
 
     return content;
@@ -112,7 +127,8 @@ export function renderShell(
       const component = typeof spec === "object" && spec !== null && "component" in spec
         ? spec.component
         : undefined;
-      const itemClass = component === "DataTable" || component === "ChartCard"
+      const itemClass = component === "DataTable" || component === "ChartCard" ||
+        component === "DonutChart" || component === "Leaderboard"
         ? "dk-item dk-item-panel"
         : "dk-item";
       return `<div class="${escapeHtml(itemClass)}">${renderComponent(spec, fixtures)}</div>`;

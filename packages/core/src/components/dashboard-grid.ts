@@ -2,6 +2,9 @@ import { z } from "zod";
 import { MetricCardSpec } from "./metric-card.js";
 import { DataTableSpec } from "./data-table.js";
 import { ChartCardSpec } from "./chart-card.js";
+import { DonutChartSpec } from "./donut-chart.js";
+import { LeaderboardSpec } from "./leaderboard.js";
+import { ProgressBarSpec } from "./progress-bar.js";
 
 export const DashboardGridSpec = z.object({
   component: z.literal("DashboardGrid"),
@@ -11,7 +14,10 @@ export const DashboardGridSpec = z.object({
     rows: z.string().optional().describe("Optional CSS grid-template-rows override; a first row containing only metrics fits content, and all other rows share available height. A single row fills the available height."),
     children: z.array(z.object({
       span: z.number().int().min(1).max(12).default(12),
-      spec: z.union([MetricCardSpec, DataTableSpec, ChartCardSpec]),
+      spec: z.union([
+        MetricCardSpec, DataTableSpec, ChartCardSpec,
+        DonutChartSpec, LeaderboardSpec, ProgressBarSpec,
+      ]),
     })).min(1).max(20),
   }),
 });

@@ -79,6 +79,23 @@ const specs = [
         {
           span: 4,
           spec: {
+            component: "DonutChart",
+            props: {
+              title: "Revenue Split",
+              data: [
+                { label: "NA", value: 875000 },
+                { label: "EMEA", value: 742000 },
+                { label: "APAC", value: 688000 },
+                { label: "LATAM", value: 326000 },
+                { label: "DACH", value: 415000 },
+              ],
+              format: "currency",
+            },
+          },
+        },
+        {
+          span: 6,
+          spec: {
             component: "DataTable",
             props: {
               dataRef: "query.revenue_by_region",
@@ -88,6 +105,35 @@ const specs = [
               ],
               pageSize: 25,
               emptyState: "No revenue data for this period",
+            },
+          },
+        },
+        {
+          span: 3,
+          spec: {
+            component: "Leaderboard",
+            props: {
+              title: "Top Regions",
+              items: [
+                { label: "North America", value: 875000, trend: "up" },
+                { label: "EMEA", value: 742000, trend: "up" },
+                { label: "APAC", value: 688000, trend: "flat" },
+                { label: "LATAM", value: 326000, trend: "down" },
+                { label: "DACH", value: 415000, trend: "up" },
+              ],
+              format: "currency",
+            },
+          },
+        },
+        {
+          span: 3,
+          spec: {
+            component: "ProgressBar",
+            props: {
+              label: "Q4 Goal Progress",
+              value: 1284500,
+              max: 2000000,
+              format: "currency",
             },
           },
         },
