@@ -13,7 +13,11 @@ export function renderDataTable(
     );
   }
 
-  const headers = props.columns
+  const columns = props.columns.map((column) => ({
+    ...column,
+    align: column.align ?? (column.type === "number" || column.type === "currency" ? "right" : "left"),
+  }));
+  const headers = columns
     .map(
       (column) =>
         `<th class="dk-th dk-text-${escapeHtml(column.align)}" data-sortable="${escapeHtml(column.sortable)}" data-type="${escapeHtml(column.type)}">${escapeHtml(column.label)}</th>`,
@@ -22,7 +26,7 @@ export function renderDataTable(
   const body = rows
     .map(
       (row) =>
-        `<tr>${props.columns
+        `<tr>${columns
           .map(
             (column) =>
               `<td class="dk-td dk-text-${escapeHtml(column.align)}">${formatValue(row[column.key], column.type)}</td>`,
@@ -32,7 +36,7 @@ export function renderDataTable(
     .join("");
   const maxHeight = props.maxHeight === undefined ? "none" : `${props.maxHeight}px`;
   return (
-    `<div class="dk-card dk-table-wrapper"><div class="dk-table-scroll" style="max-height: ${escapeHtml(maxHeight)};">` +
+    `<div class="dk-card dk-table-wrapper"><div class="dk-table-scroll" style="--dk-table-max-height: ${escapeHtml(maxHeight)};">` +
     `<table class="dk-table"><thead><tr>${headers}</tr></thead><tbody>${body}</tbody></table></div>` +
     `<nav class="dk-pagination" aria-label="Table pagination">` +
     `<button class="dk-pagination-button" disabled>Prev</button>` +

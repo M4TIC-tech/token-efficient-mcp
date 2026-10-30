@@ -109,12 +109,18 @@ export function renderShell(
         return renderDashboardGrid(props, fixtures, renderComponent);
       }
 
-      return `<div class="dk-item">${renderComponent(spec, fixtures)}</div>`;
+      const component = typeof spec === "object" && spec !== null && "component" in spec
+        ? spec.component
+        : undefined;
+      const itemClass = component === "DataTable" || component === "ChartCard"
+        ? "dk-item dk-item-panel"
+        : "dk-item";
+      return `<div class="${escapeHtml(itemClass)}">${renderComponent(spec, fixtures)}</div>`;
     })
     .join("");
 
   return (
     `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Dashboard Kit Preview</title><style>${styles}</style></head>` +
-    `<body><div class="dk-grid">${components}</div><script>${sortingScript}</script></body></html>`
+    `<body><main class="dk-grid dk-shell">${components}</main><script>${sortingScript}</script></body></html>`
   );
 }

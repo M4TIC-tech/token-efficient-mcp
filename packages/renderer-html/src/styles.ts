@@ -4,7 +4,12 @@ export const stylesheet = `
   box-sizing: border-box;
 }
 
+html { min-height: 100%; }
+
 body {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
   margin: 0;
   padding: var(--brand-space-lg, 24px);
   background-color: var(--brand-color-background, #f8fafc);
@@ -17,12 +22,46 @@ body {
   display: flex;
   flex-direction: column;
   gap: var(--brand-space-md, 16px);
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  flex: 1 1 0;
+}
+
+.dk-shell { overflow: auto; }
+
+.dk-item {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  flex: 0 0 auto;
+}
+
+.dk-item-panel { flex: 1 1 0; }
+
+.dk-grid-container {
+  align-content: stretch;
+  min-width: 0;
+  min-height: 0;
+  flex: 1 1 var(--dk-grid-height, 0px);
+  overflow: auto;
+}
+
+.dk-grid-item-metric { align-self: start; }
+
+.dk-grid-item > .dk-card, .dk-item > .dk-card {
+  flex: 1 1 0;
+}
+
+.dk-grid-item > .dk-metric, .dk-item > .dk-metric {
+  flex: 0 1 auto;
+  align-self: start;
+  width: 100%;
 }
 
 .dk-card {
-  height: 100%;
+  min-width: 0;
   min-height: 0;
   display: flex;
   flex-direction: column;
@@ -48,11 +87,12 @@ body {
 .dk-table-wrapper {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  overflow: hidden;
 }
 
 .dk-table-scroll {
-  flex-grow: 1;
+  border-radius: inherit;
+  flex: 1 1 0;
   min-height: 0;
   overflow-x: auto;
   overflow-y: auto;
@@ -160,6 +200,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: var(--brand-space-sm, 8px);
+  overflow: auto;
 }
 
 .dk-metric-label {
@@ -215,7 +256,7 @@ body {
 
 .dk-chart-body {
   min-width: 0;
-  flex-grow: 1;
+  flex: 1 1 0;
   display: flex;
   flex-direction: column;
   min-height: 0;
@@ -225,18 +266,19 @@ body {
   width: 100%;
   max-width: 100%;
   min-width: 0;
-  flex-grow: 1;
+  flex: 1 1 0;
   display: flex;
   flex-direction: column;
   min-height: 0;
   overflow-x: auto;
+  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 
 .dk-chart-svg {
   display: block;
-  flex: 1;
-  min-height: 0;
+  flex: 1 0 auto;
+  min-height: 200px;
   min-width: 100%;
 }
 
@@ -266,24 +308,32 @@ body {
 }
 
 @media (min-width: 768px) {
-  .dk-grid-container { height: var(--dk-grid-height, auto); }
-  .dk-grid-fixed { grid-auto-rows: minmax(0, 1fr); }
-  .dk-grid-container > * { height: 100%; }
+  body { height: 100dvh; overflow: hidden; }
+  .dk-metric { max-height: 180px; }
+  .dk-table-wrapper { max-height: 700px; }
+  .dk-table-scroll { max-height: var(--dk-table-max-height, none); }
 }
 
 @media (max-width: 767px) {
+  .dk-grid { flex: 0 0 auto; }
+  .dk-shell { overflow: visible; }
+  .dk-item-panel { flex: 0 0 auto; min-height: 0; }
   .dk-grid-container {
-    height: auto;
+    flex: 0 0 auto;
+    min-height: 0;
     grid-template-columns: 1fr !important;
+    grid-template-rows: none !important;
     grid-auto-rows: auto;
+    overflow: visible;
   }
   .dk-grid-container > * {
     height: auto;
     grid-column: span 1 !important;
   }
-  .dk-card { height: auto; }
-  .dk-chart { height: 300px; }
-  .dk-table-wrapper { height: auto; max-height: 400px; }
+  .dk-grid-item > .dk-card, .dk-item > .dk-card { flex: 0 1 auto; }
+  .dk-card, .dk-table-scroll { max-height: none; }
+  .dk-table-scroll { flex: 0 1 auto; }
+  .dk-chart-body { flex: 0 0 auto; height: var(--dk-chart-height, 400px); }
 }
 
 @media (prefers-reduced-motion: reduce) {

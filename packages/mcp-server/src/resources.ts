@@ -27,12 +27,17 @@ export function loadBrandById(brandId: string) {
 }
 
 export function loadFixtures(): Record<string, unknown[]> {
-  const candidates = [resolve("examples", "fixtures", "revenue.json")];
-  if (workspaceExamples) {
-    candidates.push(join(workspaceExamples, "fixtures", "revenue.json"));
+  const localPath = resolve("examples", "fixtures", "revenue.json");
+  if (existsSync(localPath)) {
+    return JSON.parse(readFileSync(localPath, "utf-8"));
   }
 
-  const path = candidates.find((candidate) => existsSync(candidate));
-  // Published installations without the pilot fixture bundle render empty tables.
-  return path ? JSON.parse(readFileSync(path, "utf-8")) : {};
+  // Works beside src/resources.ts in development and dist/index.js after bundling.
+  const bundledPath = fileURLToPath(new URL("./fixtures/revenue.json", import.meta.url));
+  if (existsSync(bundledPath)) {
+    console.error(`[dashboard-kit] Using bundled fixtures: ${bundledPath}`);
+    return JSON.parse(readFileSync(bundledPath, "utf-8"));
+  }
+
+  return {};
 }

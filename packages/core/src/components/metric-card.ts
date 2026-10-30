@@ -6,12 +6,10 @@ export const MetricCardSpec = z.object({
     label: z.string(),
     value: z.number(),
     format: z.enum(["currency", "percent", "number"]).default("number"),
-    trend: z
-      .object({
-        direction: z.enum(["up", "down", "flat"]),
-        value: z.number(),
-      })
-      .optional(),
+    trend: z.object({
+      direction: z.enum(["up", "down", "flat"]),
+      value: z.number().optional(),
+    }).optional(),
     comparison: z.string().optional(),
   }),
 });
@@ -33,14 +31,14 @@ export const metricCardContract = {
     "font.heading",
   ],
   description:
-    "Render a KPI card with a value, optional trend, and optional comparison text.",
+    "Render a KPI card with a value, optional trend, and optional comparison text. Trend values are optional; a flat trend without a value displays Flat.",
   example: {
     component: "MetricCard",
     props: {
-      label: "Revenue",
-      value: 125000,
+      label: "Average Deal Size",
+      value: 48200,
       format: "currency",
-      trend: { direction: "up", value: 12.5 },
+      trend: { direction: "flat" },
       comparison: "vs. previous period",
     },
   } satisfies MetricCardSpec,

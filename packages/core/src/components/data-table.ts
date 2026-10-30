@@ -11,7 +11,8 @@ export const DataTableSpec = z.object({
           label: z.string(),
           type: z.enum(["string", "number", "date", "currency", "boolean"]),
           sortable: z.boolean().default(true),
-          align: z.enum(["left", "right", "center"]).default("left"),
+          align: z.enum(["left", "right", "center"]).optional()
+            .describe("Defaults to right for number/currency columns, left otherwise."),
         }),
       )
       .min(1)
@@ -39,20 +40,20 @@ export const dataTableContract = {
     "font.heading",
   ],
   description:
-    "Render a sortable, paginated table from a data reference. Never inline rows.",
+    "Render a sortable, paginated table from a data reference. Number and currency columns default to right alignment. Never inline rows.",
   example: {
     component: "DataTable",
     props: {
       dataRef: "query.revenue_by_region",
       columns: [
-        { key: "region", label: "Region", type: "string", sortable: true, align: "left" },
-        { key: "revenue", label: "Revenue", type: "currency", sortable: true, align: "right" },
+        { key: "region", label: "Region", type: "string", sortable: true },
+        { key: "revenue", label: "Revenue", type: "currency", sortable: true },
       ],
       pageSize: 25,
       filterable: false,
       exportable: false,
     },
-  } satisfies DataTableSpec,
+  } satisfies z.input<typeof DataTableSpec>,
 };
 
 export type DataTableContract = typeof dataTableContract;

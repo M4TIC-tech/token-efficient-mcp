@@ -1,7 +1,8 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { loadBrand } from "../packages/core/src/index.js";
+import type { z } from "zod";
+import { DashboardGridSpec, loadBrand } from "../packages/core/src/index.js";
 import { renderShell } from "../packages/renderer-html/src/index.js";
 
 const repoRoot = fileURLToPath(new URL("../", import.meta.url));
@@ -35,9 +36,9 @@ const specs = [
             component: "MetricCard",
             props: {
               label: "Average Deal Size",
-              value: 24850,
+              value: 48200,
               format: "currency",
-              trend: { direction: "up", value: 4.8 },
+              trend: { direction: "flat" },
               comparison: "vs. same period last year",
             },
           },
@@ -55,15 +56,6 @@ const specs = [
             },
           },
         },
-      ],
-    },
-  },
-  {
-    component: "DashboardGrid",
-    props: {
-      gap: "md",
-      height: "500px",
-      children: [
         {
           span: 8,
           spec: {
@@ -72,19 +64,12 @@ const specs = [
               title: "Revenue by Region",
               type: "bar",
               data: [
-  { label: "A", value: 1200000 },
-  { label: "B", value: 950000 },
-  { label: "C", value: 1500000 },
-  { label: "D", value: 800000 },
-  { label: "E", value: 1100000 },
-  { label: "F", value: 600000 },
-  { label: "G", value: 1400000 },
-  { label: "H", value: 700000 },
-  { label: "I", value: 1300000 },
-  { label: "J", value: 900000 },
-  { label: "K", value: 500000 },
-  { label: "L", value: 1000000 }
-],
+                { label: "NA", value: 875000 },
+                { label: "EMEA", value: 742000 },
+                { label: "APAC", value: 688000 },
+                { label: "LATAM", value: 326000 },
+                { label: "DACH", value: 415000 },
+              ],
               format: "currency",
               sort: "desc",
               showLabels: true,
@@ -98,8 +83,8 @@ const specs = [
             props: {
               dataRef: "query.revenue_by_region",
               columns: [
-                { key: "region", label: "Region", type: "string", align: "left" },
-                { key: "revenue", label: "Revenue", type: "currency", align: "right" },
+                { key: "region", label: "Region", type: "string" },
+                { key: "revenue", label: "Revenue", type: "currency" },
               ],
               pageSize: 25,
               emptyState: "No revenue data for this period",
@@ -109,7 +94,7 @@ const specs = [
       ],
     },
   },
-];
+] satisfies z.input<typeof DashboardGridSpec>[];
 
 const outputDir = join(repoRoot, "examples", "out");
 mkdirSync(outputDir, { recursive: true });

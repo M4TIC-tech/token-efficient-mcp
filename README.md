@@ -41,7 +41,7 @@ The agent never writes CSS. It never hallucinates a hex code. It never inlines d
 
 ## Quick Start (Claude Desktop)
 
-Add the following to your `%APPDATA%\Claude\claude_desktop_config.json` (Windows) or `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS). 
+Add the following to your `%APPDATA%\Claude\claude_desktop_config.json` (Windows) or `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS).
 
 No cloning or installation required—the server is fetched automatically via `npx`.
 
@@ -52,16 +52,37 @@ No cloning or installation required—the server is fetched automatically via `n
       "command": "npx",
       "args": [
         "-y",
-        "@m4tic/mcp-server@0.1.0"
+        "@m4tic/mcp-server@0.1.3"
       ]
     }
   }
 }
 ```
 
-Restart Claude Desktop, and the dashboard-kit tools will be available. 
+Restart Claude Desktop, and the dashboard-kit tools will be available.
 
 *(Note: By default, the server looks for brand configs in your local `examples/brand-configs/` folder. If you are using it via `npx`, it will gracefully fall back to the default light or dark theme if custom brand files are not found).*
+
+Revenue fixtures load first from `examples/fixtures/revenue.json` relative to
+the client's working directory, then from the server package's bundled
+`dist/fixtures/revenue.json`. Bundled fixture use is logged to stderr. If neither
+file exists, tables render their empty state.
+
+## Layout defaults
+
+The HTML shell fills the browser viewport. DashboardGrid automatically packs
+children into 12 columns. When there is more than one row, a first row containing
+only metrics fits its content; every other row shares the remaining height. A
+single row fills the available height. Metric spans above 4 are clamped to 4.
+On desktop, metric cards stop growing at 180px and table cards at 700px. Tables
+scroll internally; charts retain readable labels with internal scrolling when
+space is tight. On mobile, cards stack and height caps are removed.
+
+Agents can omit `height` and `rows`. Explicit `rows` overrides the automatic
+tracks; legacy `height` values are shrinkable desktop size preferences.
+Number and currency columns default to right alignment; explicit alignment still
+wins. Trend values are optional. A flat metric trend without a value displays
+`■ Flat`; a supplied value, including zero, displays its percentage.
 
 ## Features
 - **Brand Enforcement:** Injects brand tokens via CSS variables at render time. Zero hard-coded hex codes.

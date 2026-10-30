@@ -12,7 +12,7 @@ function jsonResult(value: unknown): CallToolResult {
   return { content: [{ type: "text", text: JSON.stringify(value) }] };
 }
 
-const server = new McpServer({ name: "dashboard-kit", version: "0.1.0" });
+const server = new McpServer({ name: "dashboard-kit", version: "0.1.3" });
 
 server.registerTool(
   "list_components",

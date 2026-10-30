@@ -17,10 +17,14 @@ export function renderMetricCard(props: MetricCardSpec["props"]): string {
       down: "dk-trend-down",
       flat: "dk-trend-flat",
     }[props.trend.direction];
+    const trendText = props.trend.value !== undefined
+      ? `${props.trend.value}%`
+      : props.trend.direction === "flat" ? "Flat" : undefined;
+    const trendValue = trendText === undefined ? "" : `<span>${escapeHtml(trendText)}</span>`;
 
     trend =
       `<div class="dk-trend ${escapeHtml(trendClass)}">` +
-      `<span>${escapeHtml(glyph)}</span><span>${escapeHtml(props.trend.value + "%")}</span></div>`;
+      `<span>${escapeHtml(glyph)}</span>${trendValue}</div>`;
   }
 
   const comparison =

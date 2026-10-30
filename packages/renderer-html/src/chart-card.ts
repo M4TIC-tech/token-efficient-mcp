@@ -54,7 +54,8 @@ export function renderChartCard(props: ChartCardSpec["props"]): string {
   const width = 800;
   const height = props.height;
   const top = Math.min(16, height * 0.1);
-  const bottom = Math.min(rotateLabels ? 80 : 36, height * 0.4);
+  // Add 20 units before the labels and 10 after them, while keeping small charts bounded.
+  const bottom = Math.min(rotateLabels ? 110 : 66, height * 0.4);
   const plotHeight = height - top - bottom;
   const slotWidth = (width - left - right) / data.length;
   const x = (index: number): number => left + (index + 0.5) * slotWidth;
@@ -63,7 +64,7 @@ export function renderChartCard(props: ChartCardSpec["props"]): string {
   const xPercent = (value: number): string => `${coordinate(value / width * 100)}%`;
   const yPercent = (value: number): string => `${coordinate(value / height * 100)}%`;
   const zeroY = y(0);
-  const labelY = height - bottom + Math.min(18, bottom * 0.6);
+  const labelY = height - bottom + Math.min(38, bottom * 0.6);
 
   const grid = ticks.map((tick, index) =>
     `<line class="dk-chart-grid" x1="${xPercent(left)}" y1="${yPercent(y(tick))}" x2="${xPercent(width - right)}" y2="${yPercent(y(tick))}"/>` +
@@ -102,5 +103,5 @@ export function renderChartCard(props: ChartCardSpec["props"]): string {
     : "";
   const chartName = props.title ?? (props.type === "bar" ? "Bar chart" : "Line chart");
 
-  return `<div class="dk-card dk-chart">${title}<div class="dk-chart-body"><div class="dk-chart-scroll"><svg class="dk-chart-svg" xmlns="http://www.w3.org/2000/svg" width="${coordinate(width)}" height="${coordinate(height)}" style="width: 100%; height: 100%; min-width: max(100%, calc(${escapeHtml(data.length)} * 80px), 600px);" role="img" aria-label="${escapeHtml(chartName)}"><title>${escapeHtml(chartName)}</title>${grid}${marks}${labels}</svg></div></div></div>`;
+  return `<div class="dk-card dk-chart" style="--dk-chart-height: ${coordinate(height)}px;">${title}<div class="dk-chart-body"><div class="dk-chart-scroll"><svg class="dk-chart-svg" xmlns="http://www.w3.org/2000/svg" width="${coordinate(width)}" height="${coordinate(height)}" style="width: 100%; height: 100%; min-width: max(100%, calc(${escapeHtml(data.length)} * 80px), 600px);" role="img" aria-label="${escapeHtml(chartName)}"><title>${escapeHtml(chartName)}</title>${grid}${marks}${labels}</svg></div></div></div>`;
 }
