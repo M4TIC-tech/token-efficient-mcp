@@ -23,7 +23,7 @@ function automaticRows(children: DashboardGridSpec["props"]["children"]): string
     usedColumns = (usedColumns + child.span) % 12;
   }
 
-  // Zero track minimums let panel scroll regions shrink instead of growing the page.
+  // Only a fixed viewport shares row space; the inner grid keeps its natural height.
   return metricRows.map((onlyMetrics, index) =>
     index === 0 && metricRows.length > 1 && onlyMetrics ? "auto" : "minmax(0, 1fr)",
   ).join(" ");
@@ -40,11 +40,13 @@ export function renderDashboardGrid(
     ...child,
     span: child.spec.component === "MetricCard" ? Math.min(child.span, 4) : child.span,
   }));
-  // A legacy height is a shrinkable preference, never a viewport-breaking minimum.
+  // Constrain a separate scroll wrapper, never the content grid's intrinsic height.
   const heightStyle = props.height
-    ? ` --dk-grid-height: ${cssValue(props.height)};`
+    ? ` style="--dk-grid-height: ${cssValue(props.height)};"`
     : "";
-  const rowsStyle = ` grid-template-rows: ${cssValue(props.rows || automaticRows(items))};`;
+  const rows = props.rows || (props.height ? automaticRows(items) : undefined);
+  const rowsStyle = rows ? ` grid-template-rows: ${cssValue(rows)};` : "";
+  const dashboardClass = props.height ? "te-dashboard te-dashboard--fixed" : "te-dashboard";
   const children = items.map((child) => {
     const isMetric = child.spec.component === "MetricCard";
     const childClass = isMetric ? "dk-grid-item dk-grid-item-metric" : "dk-grid-item";
@@ -52,5 +54,5 @@ export function renderDashboardGrid(
     return `<div class="${escapeHtml(childClass)}" style="grid-column: span ${escapeHtml(child.span)};${alignment}">${renderSpec(child.spec, fixtures)}</div>`;
   }).join("");
 
-  return `<div class="dk-grid-container" style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--brand-space-${escapeHtml(props.gap)});${heightStyle}${rowsStyle}">${children}</div>`;
+  return `<div class="${escapeHtml(dashboardClass)}"${heightStyle}><div class="dk-grid-container" style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--brand-space-${escapeHtml(props.gap)});${rowsStyle}">${children}</div></div>`;
 }

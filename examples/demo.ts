@@ -142,13 +142,68 @@ const specs = [
   },
 ] satisfies z.input<typeof DashboardGridSpec>[];
 
+const fourRowSpecs: z.input<typeof DashboardGridSpec>[] = structuredClone(specs);
+fourRowSpecs[0].props.children.push({
+  span: 12,
+  spec: {
+    component: "ChartCard",
+    props: {
+      title: "Fourth Row — Quarterly Revenue",
+      type: "line",
+      format: "currency",
+      sort: "none",
+      data: [
+        { label: "Q1", value: 875000 },
+        { label: "Q2", value: 1040000 },
+        { label: "Q3", value: 1190000 },
+        { label: "Q4", value: 1284500 },
+      ],
+    },
+  },
+});
+const fixedSpecs: z.input<typeof DashboardGridSpec>[] = structuredClone(fourRowSpecs);
+fixedSpecs[0].props.height = "500px";
+
+// All demo inputs remain MCP-reachable. Defensive inputs live only in renderer tests.
+const donutFixtures = [
+  { name: "donut-50-50", title: "Equal Halves", values: [50, 50] },
+  { name: "donut-three-unequal", title: "Three Unequal Slices", values: [20, 30, 50] },
+].map(({ name, title, values }) => ({
+  name,
+  specs: [{
+    component: "DashboardGrid",
+    props: {
+      children: [{
+        span: 12,
+        spec: {
+          component: "DonutChart",
+          props: {
+            title,
+            format: "percent",
+            data: values.map((value, index) => ({ label: `Category ${index + 1}`, value })),
+          },
+        },
+      }],
+    },
+  }] satisfies z.input<typeof DashboardGridSpec>[],
+}));
+const previews = [
+  { name: "preview", specs },
+  { name: "dashboard-four-rows-no-height", specs: fourRowSpecs },
+  { name: "dashboard-four-rows-fixed", specs: fixedSpecs },
+  ...donutFixtures,
+];
 const outputDir = join(repoRoot, "examples", "out");
 mkdirSync(outputDir, { recursive: true });
+const outputPaths: string[] = [];
 
 for (const brand of [lightBrand, darkBrand]) {
-  const html = renderShell(specs, brand, fixtures);
-  writeFileSync(join(outputDir, `preview-${brand.mode}.html`), html, "utf-8");
+  for (const preview of previews) {
+    const html = renderShell(preview.specs, brand, fixtures);
+    const outputPath = join(outputDir, `${preview.name}-${brand.mode}.html`);
+    writeFileSync(outputPath, html, "utf-8");
+    outputPaths.push(outputPath);
+  }
 }
 
-console.log("Preview written to examples/out/preview-light.html");
-console.log("Preview written to examples/out/preview-dark.html");
+console.log(outputPaths.map((path) => `Preview written to ${path}`).join("\n"));

@@ -4,14 +4,11 @@ export const stylesheet = `
   box-sizing: border-box;
 }
 
-html { min-height: 100%; }
+html, body { margin: 0; padding: 0; min-height: 100%; }
 
 body {
-  min-height: 100dvh;
-  display: flex;
-  flex-direction: column;
-  margin: 0;
-  padding: var(--brand-space-lg, 24px);
+  overflow-x: hidden;
+  overflow-y: auto;
   background-color: var(--brand-color-background, #f8fafc);
   color: var(--brand-color-text, #111);
   font-family: var(--brand-font-body, sans-serif);
@@ -25,10 +22,13 @@ body {
   width: 100%;
   min-width: 0;
   min-height: 0;
-  flex: 1 1 0;
+  height: auto;
 }
 
-.dk-shell { overflow: auto; }
+.dk-shell { overflow: visible; min-height: 100vh; min-height: 100dvh; }
+.dk-shell > .dk-item { margin: 0 var(--brand-space-lg, 24px); }
+.dk-shell > .dk-item:first-child { margin-top: var(--brand-space-lg, 24px); }
+.dk-shell > .dk-item:last-child { margin-bottom: calc(var(--brand-space-lg, 24px) + env(safe-area-inset-bottom, 0px)); }
 
 .dk-item {
   display: flex;
@@ -38,20 +38,41 @@ body {
   flex: 0 0 auto;
 }
 
-.dk-item-panel { flex: 1 1 0; }
+.dk-item-panel { flex: 0 0 auto; }
 
-.dk-grid-container {
-  align-content: stretch;
+.te-dashboard {
+  display: grid;
+  grid-template-rows: max-content;
+  align-content: start;
+  min-height: 100vh;
+  min-height: 100dvh;
   min-width: 0;
+  height: auto;
+  padding: var(--brand-space-lg, 24px);
+  padding-bottom: calc(var(--brand-space-lg, 24px) + env(safe-area-inset-bottom, 0px));
+}
+
+.te-dashboard--fixed {
+  height: var(--dk-grid-height);
   min-height: 0;
-  flex: 1 1 var(--dk-grid-height, 0px);
   overflow: auto;
 }
+
+.dk-grid-container {
+  align-content: start;
+  min-width: 0;
+  min-height: 0;
+  height: auto;
+  grid-auto-rows: minmax(min-content, auto);
+  overflow: visible;
+}
+
+.te-dashboard--fixed > .dk-grid-container { grid-auto-rows: minmax(0, 1fr); }
 
 .dk-grid-item-metric { align-self: start; }
 
 .dk-grid-item > .dk-card, .dk-item > .dk-card {
-  flex: 1 1 0;
+  flex: 1 1 auto;
 }
 
 .dk-grid-item > .dk-metric, .dk-item > .dk-metric {
@@ -92,7 +113,7 @@ body {
 
 .dk-table-scroll {
   border-radius: inherit;
-  flex: 1 1 0;
+  flex: 1 1 auto;
   min-height: 0;
   overflow-x: auto;
   overflow-y: auto;
@@ -256,7 +277,7 @@ body {
 
 .dk-chart-body {
   min-width: 0;
-  flex: 1 1 0;
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   min-height: 0;
@@ -266,7 +287,7 @@ body {
   width: 100%;
   max-width: 100%;
   min-width: 0;
-  flex: 1 1 0;
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   min-height: 0;
@@ -314,7 +335,7 @@ body {
 }
 
 .dk-donut-content {
-  flex: 1 1 0;
+  flex: 1 1 auto;
   min-width: 0;
   min-height: 0;
   overflow: auto;
@@ -398,7 +419,7 @@ body {
   padding: 0;
   min-width: 0;
   min-height: 0;
-  flex: 1 1 0;
+  flex: 1 1 auto;
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -455,7 +476,6 @@ body {
 }
 
 @media (min-width: 768px) {
-  body { height: 100dvh; overflow: hidden; }
   .dk-metric { max-height: 180px; }
   .dk-table-wrapper { max-height: 700px; }
   .dk-table-scroll { max-height: var(--dk-table-max-height, none); }
@@ -480,7 +500,7 @@ body {
     min-height: 0;
     grid-template-columns: 1fr !important;
     grid-template-rows: none !important;
-    grid-auto-rows: auto;
+    grid-auto-rows: minmax(min-content, auto);
     overflow: visible;
   }
   .dk-grid-container > * {
