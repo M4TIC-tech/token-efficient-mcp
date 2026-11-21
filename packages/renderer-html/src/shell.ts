@@ -95,7 +95,10 @@ export function renderShell(
 
     if (component === "DataTable") {
       const { props } = DataTableSpec.parse(spec);
-      content = renderDataTable(props, resolveDataRef(props.dataRef, fixtures));
+      const rows = resolveDataRef(props.dataRef, fixtures);
+      // Pagination is opt-in even though the contract retains its pageSize default.
+      const input = spec as { props: { pageSize?: number } };
+      content = renderDataTable({ ...props, pageSize: input.props.pageSize ?? Math.max(1, rows.length) }, rows);
     } else if (component === "MetricCard") {
       const { props } = MetricCardSpec.parse(spec);
       content = renderMetricCard(props);
@@ -119,9 +122,16 @@ export function renderShell(
   const components = specs
     .map((spec) => {
       if (typeof spec === "object" && spec !== null && "component" in spec &&
-          spec.component === "DashboardGrid") {
+          spec.component === "DashboardGrid" && "props" in spec) {
         const { props } = DashboardGridSpec.parse(spec);
-        return renderDashboardGrid(props, fixtures, renderComponent);
+        // Keep child input presence intact; parsing the grid applies child defaults.
+        const input = spec as { props: { children: { spec: unknown }[] } };
+        const originals = new Map(props.children.map((child, index) =>
+          [child.spec, input.props.children[index].spec] as const,
+        ));
+        return renderDashboardGrid(props, fixtures, (child, childFixtures) =>
+          renderComponent(originals.get(child) ?? child, childFixtures),
+        );
       }
 
       const component = typeof spec === "object" && spec !== null && "component" in spec

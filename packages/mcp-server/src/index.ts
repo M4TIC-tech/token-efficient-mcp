@@ -55,20 +55,20 @@ server.registerTool(
 server.registerTool(
   "validate_spec",
   {
-    description: "Validate component specs against their contracts for a brand.",
-    inputSchema: { specs: z.array(z.unknown()), brandId: z.string() },
+    description: "Validate component specs against their contracts for a brand. Optional mode: \"light\" | \"dark\"; brand files take precedence.",
+    inputSchema: { specs: z.array(z.unknown()), brandId: z.string(), mode: z.enum(["light", "dark"]).optional() },
   },
-  ({ specs, brandId }) => jsonResult(validateSpec(specs, loadBrandById(brandId))),
+  ({ specs, brandId, mode }) => jsonResult(validateSpec(specs, loadBrandById(brandId, mode))),
 );
 
 server.registerTool(
   "render_preview",
   {
-    description: "Render a dashboard HTML preview using a brand and static fixtures.",
-    inputSchema: { specs: z.array(z.unknown()), brandId: z.string() },
+    description: "Render a dashboard HTML preview using a brand and static fixtures. Optional mode: \"light\" | \"dark\"; brand files take precedence.",
+    inputSchema: { specs: z.array(z.unknown()), brandId: z.string(), mode: z.enum(["light", "dark"]).optional() },
   },
-  ({ specs, brandId }) => {
-    const brand = loadBrandById(brandId);
+  ({ specs, brandId, mode }) => {
+    const brand = loadBrandById(brandId, mode);
     const fixtures = loadFixtures();
 
     return {

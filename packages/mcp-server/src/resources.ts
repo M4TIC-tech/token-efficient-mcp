@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { basename, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { baseTheme, loadBrand, mergeBrand } from "@m4tic/core";
+import { BrandConfig, baseTheme, loadBrand, mergeBrand, type BaseMode } from "@m4tic/core";
 
 // Local overrides use the client's cwd. Only a source checkout uses module-relative
 // examples; installed packages rely on the base themes shipped by @m4tic/core.
@@ -10,7 +10,7 @@ const workspaceExamples = existsSync(join(workspaceRoot, "pnpm-workspace.yaml"))
   ? join(workspaceRoot, "examples")
   : undefined;
 
-export function loadBrandById(brandId: string) {
+export function loadBrandById(brandId: string, mode?: BaseMode) {
   const filename = brandId.endsWith(".json") ? brandId : `${brandId}.json`;
   const candidates = [resolve(brandId), resolve(filename)];
 
@@ -23,7 +23,16 @@ export function loadBrandById(brandId: string) {
 
   const path = candidates.find((candidate) => existsSync(candidate));
   // A present but invalid config still reports its error instead of being ignored.
-  return path ? loadBrand(path) : mergeBrand(baseTheme, { id: brandId, mode: "light" });
+  if (path) return loadBrand(path);
+
+  const requestedMode = mode ?? "light";
+  // Select the coherent base shipped by core, also when running outside a checkout.
+  const base = requestedMode === "dark"
+    ? BrandConfig.parse(JSON.parse(readFileSync(
+        new URL("./base-dark.json", import.meta.resolve("@m4tic/core")), "utf-8",
+      )))
+    : baseTheme;
+  return mergeBrand(base, { id: brandId, mode: requestedMode });
 }
 
 export function loadFixtures(): Record<string, unknown[]> {

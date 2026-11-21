@@ -1,6 +1,33 @@
 import type { DataTableSpec } from "@m4tic/core";
 import { escapeHtml, formatValue } from "./html.js";
 
+const paginationScript = String.raw`<script>
+(() => {
+  const card = document.currentScript.closest(".dk-table-wrapper");
+  const tbody = card.querySelector("tbody");
+  const pageSize = Number(card.dataset.pageSize);
+  const prev = card.querySelector("[data-page-prev]");
+  const next = card.querySelector("[data-page-next]");
+  const label = card.querySelector("[data-page-label]");
+  let page = 0;
+  function showPage() {
+    const rows = Array.from(tbody.rows), pages = Math.ceil(rows.length / pageSize);
+    page = Math.max(0, Math.min(page, pages - 1));
+    rows.forEach((row, index) => {
+      row.hidden = index < page * pageSize || index >= (page + 1) * pageSize;
+      row.dataset.rowIndex = String(index);
+    });
+    label.textContent = "Page " + (page + 1) + " of " + pages;
+    prev.disabled = page === 0;
+    next.disabled = page >= pages - 1;
+  }
+  prev.addEventListener("click", () => { page--; showPage(); });
+  next.addEventListener("click", () => { page++; showPage(); });
+  new MutationObserver(() => { page = 0; showPage(); }).observe(tbody, { childList: true });
+  showPage();
+})();
+</script>`;
+
 export function renderDataTable(
   props: DataTableSpec["props"],
   rows: Record<string, unknown>[],
@@ -13,6 +40,8 @@ export function renderDataTable(
     );
   }
 
+  const pageSize = props.pageSize ?? rows.length;
+  const paginated = Number.isInteger(pageSize) && pageSize > 0 && pageSize < rows.length;
   const columns = props.columns.map((column) => ({
     ...column,
     align: column.align ?? (column.type === "number" || column.type === "currency" ? "right" : "left"),
@@ -25,8 +54,8 @@ export function renderDataTable(
     .join("");
   const body = rows
     .map(
-      (row) =>
-        `<tr>${columns
+      (row, index) =>
+        `<tr${paginated ? ` data-row-index="${escapeHtml(index)}"${index >= pageSize ? " hidden" : ""}` : ""}>${columns
           .map(
             (column) =>
               `<td class="dk-td dk-text-${escapeHtml(column.align)}">${formatValue(row[column.key], column.type)}</td>`,
@@ -35,13 +64,16 @@ export function renderDataTable(
     )
     .join("");
   const maxHeight = props.maxHeight === undefined ? "none" : `${props.maxHeight}px`;
+  const pagination = paginated
+    ? `<nav class="dk-pagination" aria-label="Table pagination">` +
+      `<button class="dk-pagination-button" type="button" data-page-prev disabled>Prev</button>` +
+      `<span data-page-label aria-live="polite">Page 1 of ${escapeHtml(Math.ceil(rows.length / pageSize))}</span>` +
+      `<button class="dk-pagination-button" type="button" data-page-next>Next</button>` +
+      `</nav>${paginationScript}`
+    : "";
   return (
-    `<div class="dk-card dk-table-wrapper"><div class="dk-table-scroll" style="--dk-table-max-height: ${escapeHtml(maxHeight)};">` +
+    `<div class="dk-card dk-table-wrapper"${paginated ? ` data-page-size="${escapeHtml(pageSize)}"` : ""}><div class="dk-table-scroll" style="--dk-table-max-height: ${escapeHtml(maxHeight)};">` +
     `<table class="dk-table"><thead><tr>${headers}</tr></thead><tbody>${body}</tbody></table></div>` +
-    `<nav class="dk-pagination" aria-label="Table pagination">` +
-    `<button class="dk-pagination-button" disabled>Prev</button>` +
-    `<span>Page 1 of ${escapeHtml(Math.ceil(rows.length / props.pageSize))}</span>` +
-    `<button class="dk-pagination-button" disabled>Next</button>` +
-    `</nav></div>`
+    `${pagination}</div>`
   );
 }

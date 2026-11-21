@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import type { z } from "zod";
 import { DashboardGridSpec, loadBrand } from "../packages/core/src/index.js";
 import { renderShell } from "../packages/renderer-html/src/index.js";
+import { loadBrandById } from "../packages/mcp-server/src/resources.js";
 
 const repoRoot = fileURLToPath(new URL("../", import.meta.url));
 const lightBrand = loadBrand(join(repoRoot, "examples", "brand-configs", "acme.json"));
@@ -187,11 +188,40 @@ const donutFixtures = [
     },
   }] satisfies z.input<typeof DashboardGridSpec>[],
 }));
-const previews = [
+const paginationSpecs = [{
+  component: "DashboardGrid",
+  props: {
+    children: [{
+      span: 12,
+      spec: {
+        component: "DataTable",
+        props: {
+          dataRef: "query.revenue_by_region",
+          columns: [
+            { key: "region", label: "Region", type: "string" },
+            { key: "revenue", label: "Revenue", type: "currency" },
+          ],
+          pageSize: 10,
+        },
+      },
+    }],
+  },
+}] satisfies z.input<typeof DashboardGridSpec>[];
+const previews: {
+  name: string;
+  specs: z.input<typeof DashboardGridSpec>[];
+  fixtures?: Record<string, unknown[]>;
+}[] = [
   { name: "preview", specs },
   { name: "dashboard-four-rows-no-height", specs: fourRowSpecs },
   { name: "dashboard-four-rows-fixed", specs: fixedSpecs },
   ...donutFixtures,
+  { name: "table-pagination", specs: paginationSpecs },
+  {
+    name: "table-single-page",
+    specs: paginationSpecs,
+    fixtures: { ...fixtures, "query.revenue_by_region": fixtures["query.revenue_by_region"].slice(0, 5) },
+  },
 ];
 const outputDir = join(repoRoot, "examples", "out");
 mkdirSync(outputDir, { recursive: true });
@@ -199,11 +229,19 @@ const outputPaths: string[] = [];
 
 for (const brand of [lightBrand, darkBrand]) {
   for (const preview of previews) {
-    const html = renderShell(preview.specs, brand, fixtures);
+    const html = renderShell(preview.specs, brand, preview.fixtures ?? fixtures);
     const outputPath = join(outputDir, `${preview.name}-${brand.mode}.html`);
     writeFileSync(outputPath, html, "utf-8");
     outputPaths.push(outputPath);
   }
 }
+
+// This is a top-level MCP request: mode is alongside specs and brandId, not a component prop.
+const darkRequest = { specs: fourRowSpecs, brandId: "__default_from_spec__", mode: "dark" as const };
+const fromSpecBrand = loadBrandById(darkRequest.brandId, darkRequest.mode);
+if (fromSpecBrand.mode !== "dark") throw new Error("The mode fixture must use the dark fallback.");
+const fromSpecPath = join(outputDir, "dashboard-four-rows-no-height-dark-from-spec.html");
+writeFileSync(fromSpecPath, renderShell(darkRequest.specs, fromSpecBrand, fixtures), "utf-8");
+outputPaths.push(fromSpecPath);
 
 console.log(outputPaths.map((path) => `Preview written to ${path}`).join("\n"));
